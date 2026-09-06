@@ -1,0 +1,161 @@
+.hiw {
+  background: var(--gradient-ocean);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Waves ── */
+.hiw__wave-top,
+.hiw__wave-bottom {
+  line-height: 0;
+  position: relative;
+  z-index: 1;
+}
+.hiw__wave-top svg,
+.hiw__wave-bottom svg {
+  width: 100%;
+  height: 80px;
+  display: block;
+}
+
+/* ── Background glow ── */
+.hiw__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hiw__orb {
+  position: absolute;
+  width: 750px; height: 750px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(0,188,212,0.12) 0%, transparent 68%);
+  border-radius: 50%;
+  filter: blur(40px);
+}
+
+/* ── Content ── */
+.hiw__inner {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+  position: relative;
+  z-index: 1;
+}
+
+.hiw__header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+}
+
+.hiw__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 4vw, 3.1rem);
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: var(--space-md);
+}
+.hiw__subtitle {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.58);
+  max-width: 490px;
+  margin-inline: auto;
+  line-height: 1.7;
+}
+
+/* ── Steps ── */
+.hiw__steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+/* Connecting line */
+.hiw__connector {
+  position: absolute;
+  top: 34px;
+  left: calc(12.5% + 24px);
+  right: calc(12.5% + 24px);
+  height: 1px;
+  background: linear-gradient(90deg,
+    rgba(0,188,212,0.55) 0%,
+    rgba(0,188,212,0.18) 100%
+  );
+  z-index: 0;
+}
+
+.hiw__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.hiw__step-num {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-aqua);
+  margin-bottom: var(--space-sm);
+}
+
+.hiw__step-card {
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl) var(--space-md);
+  width: 100%;
+  transition: all var(--transition-base);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.hiw__step:hover .hiw__step-card {
+  background: rgba(255,255,255,0.095);
+  border-color: rgba(0,188,212,0.28);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.22);
+}
+
+.hiw__step-icon {
+  width: 54px; height: 54px;
+  background: linear-gradient(135deg, rgba(0,151,167,0.28), rgba(0,188,212,0.18));
+  border: 1px solid rgba(0,188,212,0.18);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-md);
+  color: var(--color-aqua);
+  transition: all var(--transition-base);
+}
+.hiw__step:hover .hiw__step-icon {
+  background: linear-gradient(135deg, rgba(0,151,167,0.48), rgba(0,188,212,0.34));
+  box-shadow: 0 0 22px rgba(0,188,212,0.22);
+}
+
+.hiw__step-title {
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 600;
+  color: var(--color-white);
+  margin-bottom: var(--space-sm);
+}
+.hiw__step-desc {
+  font-size: 0.825rem;
+  color: rgba(255,255,255,0.52);
+  line-height: 1.68;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hiw__steps { grid-template-columns: repeat(2, 1fr); }
+  .hiw__connector { display: none; }
+}
+@media (max-width: 560px) {
+  .hiw__steps { grid-template-columns: 1fr; }
+}

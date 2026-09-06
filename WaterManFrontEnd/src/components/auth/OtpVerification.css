@@ -1,0 +1,102 @@
+/* ── OTP header ── */
+.otp-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.otp-phone-icon {
+  font-size: 2.8rem;
+  margin-bottom: var(--space-sm);
+  animation: float 3s ease-in-out infinite;
+  display: block;
+}
+
+/* ── 6 digit boxes ── */
+.otp-inputs {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: var(--space-lg) 0;
+}
+
+.otp-box {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: var(--font-body);
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  color: var(--color-dark);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  caret-color: var(--color-aqua);
+}
+
+.otp-box:focus {
+  border-color: var(--color-aqua);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0,188,212,0.14);
+}
+
+.otp-box--filled {
+  border-color: var(--color-teal);
+  background: #e0f7fa;
+  color: var(--color-ocean);
+}
+
+.otp-box--error {
+  border-color: #f44336 !important;
+  box-shadow: 0 0 0 3px rgba(244,67,54,0.1) !important;
+}
+
+/* ── Resend row ── */
+.otp-resend {
+  text-align: center;
+  margin-top: var(--space-md);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.otp-resend__btn {
+  background: none;
+  border: none;
+  color: var(--color-teal);
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+.otp-resend__btn:hover { color: var(--color-ocean); }
+
+/* ── Success state ── */
+.otp-success {
+  text-align: center;
+  animation: fadeUp 0.4s ease both;
+}
+
+.otp-success__icon {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, var(--color-teal), var(--color-aqua));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  margin: 0 auto var(--space-lg);
+  box-shadow: 0 8px 24px rgba(0,188,212,0.3);
+  animation: pulse 1s ease 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 380px) {
+  .otp-box { width: 40px; height: 48px; font-size: 1.2rem; }
+  .otp-inputs { gap: 6px; }
+}

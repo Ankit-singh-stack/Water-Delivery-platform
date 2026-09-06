@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.dev/
+build/
+.env
+.env.local
+.env.production
+*.log
+logs/
+*.tsbuildinfo
+coverage/
+test-results/
+playwright-report/
+.DS_Store
+
+# Nested git metadata (folders are separate repos outside this monorepo)
+WaterManBackEnd/.git/
+WaterManFrontEnd/.git/
+
+# Backend
+WaterManBackEnd/uploads/

@@ -1,0 +1,533 @@
+/* Shared styles for all Admin sidebar panels (Cities, Role Management, Role History).
+   Scoped under .admin-section so they don't leak into ProfilePage.css's classes of
+   the same name (.form-input etc. are intentionally NOT redefined here — panels
+   reuse the dark form-field/input/alert styles already defined in ProfilePage.css). */
+
+/* ── Card ──────────────────────────────────────────────────────────────────── */
+.admin-section .admin-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.admin-section .admin-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-section .admin-card__heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+.admin-section .admin-card__count {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+/* ── Toolbar ───────────────────────────────────────────────────────────────── */
+.admin-section .admin-toolbar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.admin-section .admin-search {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.admin-section .admin-search__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.admin-section .admin-search__input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.admin-section .admin-search__input:focus { border-color: #3b82f6; background: #fff; }
+
+.admin-section .admin-filter {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #f8fafc;
+  outline: none;
+  cursor: pointer;
+  min-width: 140px;
+}
+.admin-section .admin-filter:focus { border-color: #3b82f6; }
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.admin-section .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+.admin-section .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.admin-section .btn--primary { background: #3b82f6; color: #fff; }
+.admin-section .btn--primary:hover:not(:disabled) { background: #2563eb; }
+
+.admin-section .btn--danger  { background: #fee2e2; color: #dc2626; }
+.admin-section .btn--danger:hover:not(:disabled)  { background: #fecaca; }
+
+.admin-section .btn--success { background: #dcfce7; color: #16a34a; }
+.admin-section .btn--success:hover:not(:disabled) { background: #bbf7d0; }
+
+.admin-section .btn--ghost   { background: #f1f5f9; color: #475569; }
+.admin-section .btn--ghost:hover:not(:disabled)   { background: #e2e8f0; }
+
+.admin-section .btn--sm { padding: 5px 10px; font-size: 13px; }
+
+/* ── Table ─────────────────────────────────────────────────────────────────── */
+.admin-section .admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-section .admin-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-section .admin-table th {
+  text-align: left;
+  padding: 11px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-section .admin-table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  vertical-align: middle;
+}
+
+.admin-section .admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-section .admin-table tbody tr:hover td { background: #f8fafc; }
+
+.admin-section .admin-table__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-section .admin-role-select {
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #1e293b;
+  background: #f8fafc;
+  cursor: pointer;
+}
+.admin-section .admin-role-select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Status badge ──────────────────────────────────────────────────────────── */
+.admin-section .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.admin-section .badge--active   { background: #dcfce7; color: #16a34a; }
+.admin-section .badge--inactive { background: #fee2e2; color: #dc2626; }
+.admin-section .badge--user     { background: #e0f2fe; color: #0369a1; }
+.admin-section .badge--vendor   { background: #ede9fe; color: #6d28d9; }
+.admin-section .badge--admin    { background: #fef3c7; color: #b45309; }
+.admin-section .badge--super_admin { background: #ffe4e6; color: #be123c; }
+
+/* ── Empty state ───────────────────────────────────────────────────────────── */
+.admin-section .admin-empty {
+  text-align: center;
+  padding: 60px 24px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+.admin-section .admin-empty__icon { font-size: 36px; margin-bottom: 12px; }
+
+/* ── Modal (uses the app's dark form-field/input styling from ProfilePage.css) ── */
+.admin-section .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.admin-section .modal {
+  background: #12222b;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  animation: adminModalIn 0.18s ease;
+}
+
+@keyframes adminModalIn {
+  from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.admin-section .modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.admin-section .modal__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.admin-section .modal__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.admin-section .modal__close:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+.admin-section .modal__body { padding: 20px 24px; }
+
+.admin-section .modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ── Dark-theme overrides for form fields inside admin modals ── */
+.admin-section .form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.03em;
+}
+.admin-section .form-label span { color: #fc8181; margin-left: 2px; }
+
+.admin-section .form-input,
+.admin-section .form-select {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 1rem;
+  padding: 10px 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.admin-section .form-input::placeholder { color: rgba(255,255,255,0.3); }
+.admin-section .form-input:focus,
+.admin-section .form-select:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+}
+.admin-section .form-input--error,
+.admin-section .form-select.form-input--error {
+  border-color: rgba(252,129,129,0.6);
+}
+.admin-section .form-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Select-specific: custom arrow in light colour */
+.admin-section .form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-color: rgba(255,255,255,0.07);
+  padding-right: 36px;
+  cursor: pointer;
+}
+/* Style the dropdown options (best effort — browser-controlled) */
+.admin-section .form-select option {
+  background: #1e293b;
+  color: #e2e8f0;
+}
+
+.admin-section .field-error {
+  font-size: 0.75rem;
+  color: #fc8181;
+  margin-top: 4px;
+}
+
+/* ── Tanker Types panel ── */
+.tt-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.tt-title {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+.tt-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.45);
+}
+.tt-loading {
+  text-align: center;
+  padding: 40px 0;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.9rem;
+}
+
+.tt-table-wrap {
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.tt-table {
+  width: 100%;
+  min-width: 580px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.tt-table thead {
+  background: rgba(255,255,255,0.05);
+}
+.tt-table th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255,255,255,0.45);
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.tt-table td {
+  padding: 12px 16px;
+  color: rgba(255,255,255,0.75);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  vertical-align: middle;
+}
+.tt-table tbody tr:last-child td { border-bottom: none; }
+.tt-table tbody tr:hover td { background: rgba(255,255,255,0.03); }
+
+.tt-row--inactive td { opacity: 0.45; }
+
+.tt-td--name {
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.tt-td--actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.tt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tt-badge--active   { background: rgba(34,197,94,0.15);  color: #4ade80; }
+.tt-badge--inactive { background: rgba(148,163,184,0.1); color: #94a3b8; }
+
+.tt-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: rgba(255,255,255,0.3);
+  font-size: 0.85rem;
+}
+
+/* Dark overrides for btn variants inside admin-section */
+.admin-section .btn--ghost {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.admin-section .btn--ghost:hover:not(:disabled) {
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+}
+.admin-section .btn--danger {
+  background: rgba(239,68,68,0.15);
+  color: #f87171;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+.admin-section .btn--danger:hover:not(:disabled) {
+  background: rgba(239,68,68,0.25);
+}
+.admin-section .btn--success {
+  background: rgba(34,197,94,0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34,197,94,0.2);
+}
+.admin-section .btn--success:hover:not(:disabled) {
+  background: rgba(34,197,94,0.25);
+}
+
+/* ── Tanker image upload (in modal) ── */
+.tt-img-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 10px;
+}
+.tt-img-preview {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+.tt-img-placeholder {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.25);
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+.tt-img-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* Thumbnail in table */
+.tt-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: block;
+}
+.tt-thumb-empty {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  font-size: 1.2rem;
+}
+
+/* ── Tanker group header rows ── */
+.tt-group-row td {
+  padding: 8px 16px 6px;
+  border-bottom: none;
+  background: transparent;
+}
+.tt-group-row--active td  { border-top: 1px solid rgba(74,222,128,0.15); }
+.tt-group-row--inactive td { border-top: 1px solid rgba(148,163,184,0.12); }
+.tt-group-row:first-child td { border-top: none; }
+
+.tt-group-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.35);
+}
+.tt-group-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tt-group-dot--active   { background: #4ade80; }
+.tt-group-dot--inactive { background: #64748b; }
+
+.tt-group-count {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.4);
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+}

@@ -1,0 +1,118 @@
+.delivery-admin {
+  max-width: 900px;
+}
+.delivery-admin__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.delivery-admin__filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.delivery-admin__filter {
+  background: rgba(255,255,255,0.06);
+  color: #cbd5e1;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.delivery-admin__filter--active {
+  background: rgba(37,99,235,0.25);
+  border-color: #3b82f6;
+  color: #fff;
+}
+.delivery-admin__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.delivery-admin__card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+}
+.delivery-admin__card--inactive {
+  opacity: 0.6;
+}
+.delivery-admin__card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.delivery-admin__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+.delivery-admin__status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+.delivery-admin__status--active   { background: rgba(16,185,129,0.2); color: #34d399; }
+.delivery-admin__status--pending  { background: rgba(245,158,11,0.2); color: #fbbf24; }
+.delivery-admin__status--suspended{ background: rgba(239,68,68,0.2);  color: #f87171; }
+.delivery-admin__status--rejected { background: rgba(148,163,184,0.2); color: #94a3b8; }
+.delivery-admin__info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-bottom: 4px;
+}
+.delivery-admin__stats {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #cbd5e1;
+  margin-top: 8px;
+}
+.delivery-admin__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.delivery-admin__btn {
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.delivery-admin__btn--approve { background: #10b981; color: #fff; }
+.delivery-admin__btn--approve:hover { background: #059669; }
+.delivery-admin__btn--reject  { background: #ef4444; color: #fff; }
+.delivery-admin__btn--reject:hover { background: #dc2626; }
+.delivery-admin__btn--suspend { background: #f59e0b; color: #1f2937; }
+.delivery-admin__btn--suspend:hover { background: #d97706; }
+.delivery-admin__loading,
+.delivery-admin__empty {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+}
+.delivery-admin__toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 1000;
+}

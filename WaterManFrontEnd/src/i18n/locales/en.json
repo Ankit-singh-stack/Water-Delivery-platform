@@ -1,0 +1,290 @@
+{
+  "nav": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout",
+    "my_profile": "My Profile",
+    "notifications": "Notifications",
+    "help_support": "Help & Support",
+    "admin_panel": "Admin Panel",
+    "home": "Home",
+    "features": "Features",
+    "how_it_works": "How It Works"
+  },
+  "hero": {
+    "tagline": "Pure Water,",
+    "tagline2": "Delivered to Your Door",
+    "subtitle": "Pure water delivered straight to your door by our dedicated water trucks. Never worry about water again.",
+    "cta_primary": "Order Now",
+    "cta_secondary": "",
+    "badge": "Trusted by 50,000+ families across India"
+  },
+  "features": {
+    "title": "Why Choose TankerDrop?",
+    "subtitle": "We bring you the purest water with the fastest service",
+    "items": [
+      {
+        "icon": "\ud83d\ude9b",
+        "title": "Truck Delivery",
+        "description": "Our dedicated water trucks are on the road daily. Same-day delivery — your water arrives within hours of ordering."
+      },
+      {
+        "icon": "\ud83d\udca7",
+        "title": "100% Pure & Clean",
+        "description": "Multi-stage filtration and UV purification. Every drop tested and certified safe."
+      },
+      {
+        "icon": "\ud83d\udd50",
+        "title": "24/7 Service",
+        "description": "Round-the-clock customer support and emergency deliveries. We're always here for you."
+      },
+      {
+        "icon": "\ud83c\udf3f",
+        "title": "Eco-Friendly",
+        "description": "Reusable water canisters transported by our fuel-efficient trucks. Less plastic waste, lower carbon footprint."
+      },
+      {
+        "icon": "\ud83d\udcf1",
+        "title": "Easy Scheduling",
+        "description": "Schedule deliveries from your phone. Set recurring orders and track in real-time."
+      }
+    ]
+  },
+  "how_it_works": {
+    "title": "How It Works",
+    "subtitle": "Getting pure water delivered is as easy as 1-2-3",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Schedule Delivery",
+        "description": "Pick your preferred delivery time and location. We'll be there at your convenience."
+      },
+      {
+        "number": "02",
+        "title": "We Deliver",
+        "description": "Our water truck arrives at your scheduled time. The driver unloads fresh purified water right to your door."
+      },
+      {
+        "number": "03",
+        "title": "Stay Hydrated",
+        "description": "Enjoy pure, clean water every day. Manage your subscription anytime from the app."
+      }
+    ]
+  },
+  "common": {
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "loading": "Loading…"
+  },
+  "profile": {
+    "account": "My Account",
+    "nav": {
+      "general": "General Information",
+      "addresses": "My Addresses",
+      "orders": "My Orders",
+      "notifications": "Notifications",
+      "help": "Help & Support",
+      "password": "Change Password"
+    },
+    "general": {
+      "title": "General Information",
+      "subtitle": "Update your name and email. OTP verification required to save changes.",
+      "save_btn": "Save Changes",
+      "saved": "Profile updated successfully."
+    },
+    "addresses": {
+      "title": "My Addresses",
+      "subtitle": "Manage your delivery addresses.",
+      "add_btn": "Add New Address",
+      "add_title": "Add New Address",
+      "edit_title": "Edit Address",
+      "saved": "Address saved.",
+      "confirm_delete": "Delete this address?",
+      "empty": "No addresses yet. Add one to get started.",
+      "default": "Default",
+      "label_default": "Address",
+      "set_default": "Set as default",
+      "label": "Label",
+      "door_no": "Door No.",
+      "plot_no": "Plot No.",
+      "building_name": "Building Name",
+      "street_name": "Street Name",
+      "area_name": "Area / Locality",
+      "city": "City",
+      "state": "State",
+      "country": "Country"
+    },
+    "orders": {
+      "title": "My Orders",
+      "subtitle": "Your complete order history.",
+
+      "stat_draft": "Active / Draft",
+      "stat_delivered": "Delivered",
+      "stat_failed": "Failed",
+      "stat_rejected": "Rejected",
+      "empty": "No orders yet.",
+      "col_srno": "Sr. No.",
+      "col_order_id": "Order ID",
+      "col_address": "Delivered To",
+      "col_delivered_by": "Delivered By",
+      "col_date": "Date",
+      "col_status": "Status"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "Stay updated on your orders and deliveries.",
+      "tab_all": "All",
+      "tab_unread": "Unread",
+      "tab_orders": "Orders",
+      "tab_delivery": "Delivery",
+      "tab_system": "System",
+      "mark_all": "Mark all read",
+      "empty": "No notifications here.",
+      "prefs_title": "Notification Preferences",
+      "prefs_subtitle": "Choose what updates you want to receive.",
+      "pref_orders": "Order Updates",
+      "pref_orders_desc": "Order confirmations and status changes",
+      "pref_delivery": "Delivery Alerts",
+      "pref_delivery_desc": "Driver dispatch and arrival notifications",
+      "pref_promos": "Promotions",
+      "pref_promos_desc": "Offers, discounts, and seasonal deals",
+      "pref_system": "System Notifications",
+      "pref_system_desc": "Account security and app updates"
+    },
+    "help": {
+      "title": "Help & Support",
+      "subtitle": "Find answers or get in touch with our team.",
+      "action_track": "Track Order",
+      "action_track_desc": "Real-time delivery status",
+      "action_report": "Report Issue",
+      "action_report_desc": "Something went wrong?",
+      "action_call": "Call Support",
+      "action_call_desc": "Mon–Sat, 7 AM – 8 PM",
+      "faq_title": "Frequently Asked Questions",
+      "faq_subtitle": "Quick answers to common questions.",
+      "contact_title": "Contact Support",
+      "contact_subtitle": "Fill in the form and we'll get back to you shortly.",
+      "subject": "Subject",
+      "subject_placeholder": "Select a subject…",
+      "message": "Message",
+      "message_placeholder": "Describe your issue in detail (minimum 20 characters)…",
+      "message_min": "Please enter at least 20 characters.",
+      "submit_btn": "Send Message",
+      "ticket_sent": "Your message has been sent. We'll respond within 24 hours."
+    },
+    "password": {
+      "title": "Change Password",
+      "subtitle": "Enter your current password, then your new password. OTP verification required.",
+      "current_label": "Current Password",
+      "new_label": "New Password",
+      "confirm_label": "Confirm New Password",
+      "change_btn": "Change Password",
+      "changed": "Password changed successfully.",
+      "invalid_current": "Current password is incorrect."
+    }
+  },
+  "footer": {
+    "tagline": "Delivering purity, one drop at a time.",
+    "copyright": "© 2026 TankerDrop India Pvt. Ltd. All rights reserved.",
+    "made_in": "Made with ❤️ in India"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your TankerDrop account",
+      "identifier_label": "Email or Phone Number",
+      "identifier_placeholder": "Enter email or phone number",
+      "password_label": "Password",
+      "password_placeholder": "Enter your password",
+      "login_btn": "Sign In",
+      "forgot": "Forgot Password?",
+      "no_account": "Don't have an account?",
+      "signup_link": "Sign Up"
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join TankerDrop for pure water delivered by truck",
+      "first_name_label": "First Name",
+      "first_name_placeholder": "Enter first name",
+      "last_name_label": "Last Name",
+      "last_name_placeholder": "Enter last name",
+      "email_label": "Email Address",
+      "email_placeholder": "Enter email address",
+      "phone_label": "Phone Number",
+      "phone_placeholder": "10-digit phone number",
+      "password_label": "Password",
+      "password_placeholder": "Create a strong password",
+      "confirm_label": "Confirm Password",
+      "confirm_placeholder": "Re-enter your password",
+      "create_btn": "Create Account",
+      "have_account": "Already have an account?",
+      "login_link": "Sign In"
+    },
+    "delivery_signup": {
+      "title": "Delivery Partner Registration",
+      "subtitle": "Deliver pure water to your community and earn per delivery",
+      "vehicle_type_label": "Vehicle Type",
+      "vehicle_type_placeholder": "e.g. Canter, Tempo",
+      "vehicle_number_label": "Vehicle Number",
+      "vehicle_number_placeholder": "e.g. AP-01-AB-1234",
+      "service_area_label": "Service Area",
+      "service_area_placeholder": "e.g. Nellore, AP",
+      "has_license_label": "I have a valid driving licence",
+      "license_number_label": "License Number",
+      "license_number_placeholder": "Enter your licence number",
+      "register_btn": "Register as Delivery Partner"
+    },
+    "password": {
+      "show": "Show",
+      "hide": "Hide",
+      "strength": {
+        "weak": "Weak",
+        "medium": "Medium",
+        "strong": "Strong"
+      },
+      "conditions": {
+        "length": "At least 8 characters",
+        "upper": "One uppercase letter (A-Z)",
+        "number": "One number (0-9)",
+        "special": "One special character (!@#$...)"
+      }
+    },
+    "otp": {
+      "title": "Verify Your Phone",
+      "subtitle": "We sent a 6-digit code to",
+      "verify_btn": "Verify & Continue",
+      "resend": "Resend OTP",
+      "resend_in": "Resend in",
+      "dev_notice": "Dev Mode — OTP:",
+      "success_title": "Phone Verified!",
+      "success": "Your account is ready. Redirecting…"
+    },
+    "forgot": {
+      "title": "Reset Password",
+      "subtitle": "Enter your email or phone to receive a reset link",
+      "identifier_label": "Email or Phone Number",
+      "identifier_placeholder": "Enter email or phone",
+      "send_btn": "Send Reset Link",
+      "back_login": "Back to Login",
+      "sent_title": "Check Your Inbox",
+      "success": "A password reset link has been sent to your email/phone."
+    },
+    "errors": {
+      "invalid_credentials": "Invalid email/phone or password. Please try again.",
+      "email_exists": "This email is already registered.",
+      "phone_exists": "This phone number is already registered.",
+      "otp_invalid": "Invalid OTP. Please try again.",
+      "error_incomplete": "Please enter all 6 digits.",
+      "passwords_mismatch": "Passwords do not match.",
+      "required": "This field is required.",
+      "invalid_email": "Please enter a valid email address.",
+      "invalid_phone": "Please enter a valid 10-digit phone number.",
+      "weak_password": "Password must meet all requirements above.",
+      "no_account": "No account found with this email/phone.",
+      "unverified": "Account exists but phone is not verified. Please complete verification."
+    }
+  }
+}

@@ -1,0 +1,274 @@
+/* ── Auth page shell ── */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+}
+
+.auth-body {
+  flex: 1;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ════════════════════════════════════════════
+   LEFT PANEL — decorative water theme
+════════════════════════════════════════════ */
+.auth-left {
+  position: relative;
+  width: 460px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.auth-left__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-hero);
+}
+
+.auth-left__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(0,188,212,0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.5;
+}
+
+.auth-left__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-xl) var(--space-xl) var(--space-2xl);
+  text-align: center;
+}
+
+/* ── Top bar: brand + controls ── */
+.auth-left__topbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: auto;
+  padding-bottom: var(--space-xl);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  filter: drop-shadow(0 0 8px rgba(0,188,212,0.45));
+  transition: filter var(--transition-base);
+}
+.auth-brand:hover { filter: drop-shadow(0 0 16px rgba(0,188,212,0.85)); }
+
+.auth-brand__name {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  background: linear-gradient(130deg, #fff 0%, #80deea 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Controls: font size + language */
+.auth-left__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Font size ── */
+.al-font-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-full);
+  padding: 3px 8px;
+}
+
+.al-font-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1;
+  transition: all var(--transition-fast);
+}
+.al-font-btn--small  { font-size: 0.65rem; }
+.al-font-btn--medium { font-size: 0.82rem; }
+.al-font-btn--large  { font-size: 0.98rem; }
+.al-font-btn sup     { font-size: 0.6em; vertical-align: super; }
+.al-font-btn:hover   { color: #fff; background: rgba(255,255,255,0.1); }
+.al-font-btn.active  { color: var(--color-aqua); background: rgba(0,188,212,0.15); }
+
+/* ── Language selector ── */
+.al-lang { position: relative; }
+
+.al-lang__btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-full);
+  color: rgba(255,255,255,0.82);
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans Telugu','Noto Sans Tamil', var(--font-body);
+  transition: all var(--transition-fast);
+}
+.al-lang__btn:hover {
+  background: rgba(0,188,212,0.14);
+  border-color: rgba(0,188,212,0.35);
+  color: #fff;
+}
+
+.al-lang__chevron {
+  transition: transform var(--transition-fast);
+  opacity: 0.65;
+}
+.al-lang__chevron.open { transform: rotate(180deg); }
+
+.al-lang__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 148px;
+  background: rgba(5,21,37,0.96);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0,188,212,0.2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.45);
+  animation: fadeIn 0.14s ease;
+  z-index: 10;
+}
+
+.al-lang__opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.68);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+.al-lang__opt:hover  { background: rgba(0,188,212,0.09); color: #fff; }
+.al-lang__opt.active { background: rgba(0,188,212,0.15); color: var(--color-aqua); }
+
+.al-lang__code { font-size: 0.9rem; font-weight: 700; min-width: 22px; font-family: 'Noto Sans Telugu','Noto Sans Tamil', var(--font-body); }
+.al-lang__name { font-size: 0.78rem; opacity: 0.75; }
+
+/* ── Illustration ── */
+.auth-left__illustration {
+  position: relative;
+  width: 200px;
+  height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+}
+.auth-left__illustration > svg {
+  animation: float 4s ease-in-out infinite;
+  filter: drop-shadow(0 16px 40px rgba(0,188,212,0.35));
+  position: relative;
+  z-index: 1;
+}
+
+.auth-drop-ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0,188,212,0.25);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px; height: 220px;
+}
+.auth-drop-ripple--1 { animation: ripple 3s 0.0s ease-out infinite; }
+.auth-drop-ripple--2 { animation: ripple 3s 1.0s ease-out infinite; }
+.auth-drop-ripple--3 { animation: ripple 3s 2.0s ease-out infinite; }
+
+/* ── Tagline ── */
+.auth-left__tagline {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.65;
+  margin-bottom: var(--space-xl);
+}
+
+/* ── Stats ── */
+.auth-left__stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: 16px 24px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(10px);
+}
+.auth-stat         { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.auth-stat__val    { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: #fff; }
+.auth-stat__lbl    { font-size: 0.68rem; color: rgba(255,255,255,0.5); letter-spacing: 0.07em; text-transform: uppercase; }
+.auth-stat__sep    { width: 1px; height: 32px; background: rgba(255,255,255,0.14); }
+
+/* ════════════════════════════════════════════
+   RIGHT PANEL — form area
+════════════════════════════════════════════ */
+.auth-right {
+  flex: 1;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-xl);
+  overflow-y: auto;
+}
+
+.auth-form-wrap {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ════════════════════════════════════════════
+   Responsive
+════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .auth-left  { display: none; }
+  .auth-right { justify-content: flex-start; padding-top: var(--space-2xl); }
+}
+
+@media (max-width: 480px) {
+  .auth-right     { padding: var(--space-lg); }
+  .auth-form-wrap { max-width: 100%; }
+}
