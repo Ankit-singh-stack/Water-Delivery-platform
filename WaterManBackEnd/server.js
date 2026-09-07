@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
@@ -18,41 +19,93 @@ const pool = require("./db/pool");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── CORS ──────────────────────────────────────────────────────────────────────
-const allowedOrigin = process.env.FRONTEND_URL || "http://localhost:5174";
+// ─────────────────────────────────────────────────────────────────────────────
+// TRUST PROXY
+// Required when running behind Render's proxy/load balancer.
+// Also safe for local development.
+// ─────────────────────────────────────────────────────────────────────────────
+app.set("trust proxy", 1);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CORS
+// ─────────────────────────────────────────────────────────────────────────────
+
+const allowedOrigin =
+  process.env.FRONTEND_URL || "http://localhost:5174";
 
 app.use(
   cors({
     origin(origin, cb) {
-      if (!origin) return cb(null, true);
+      // Allow requests without an Origin header
+      // (Postman, server-to-server requests, etc.)
+      if (!origin) {
+        return cb(null, true);
+      }
+
+      // Allow localhost during development
       if (
         process.env.NODE_ENV !== "production" &&
         /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
-      )
+      ) {
         return cb(null, true);
-      if (origin === allowedOrigin) return cb(null, true);
+      }
+
+      // Allow configured frontend
+      if (origin === allowedOrigin) {
+        return cb(null, true);
+      }
+
       cb(new Error(`CORS: origin ${origin} not allowed`));
     },
+
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
+  })
 );
 
-// ── Swagger (dev/staging only) ────────────────────────────────────────────────
-if (process.env.NODE_ENV === 'production') {
-  app.use('/swagger', (_req, res) => res.status(404).json({ error: 'not_found' }));
+// ─────────────────────────────────────────────────────────────────────────────
+// Swagger
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (process.env.NODE_ENV === "production") {
+  app.use("/swagger", (_req, res) =>
+    res.status(404).json({
+      error: "not_found",
+    })
+  );
 }
 
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
+
     info: {
       title: "WaterMan API",
       version: "1.0.0",
       description: "API for WaterMan",
     },
-    servers: [{ url: process.env.SERVER_URL || `http://localhost:${PORT}` }],
+
+    servers: [
+      {
+        url:
+          process.env.SERVER_URL ||
+          `http://localhost:${PORT}`,
+      },
+    ],
+
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -63,18 +116,42 @@ const swaggerOptions = {
       },
     },
   },
-  apis: ["./server.js", "./routes/*.js"],
+
+  apis: [
+    "./server.js",
+    "./routes/*.js",
+  ],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use(
+  "/swagger",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs)
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BODY PARSER
+// ─────────────────────────────────────────────────────────────────────────────
 
 app.use(express.json());
 
-// ── Static files ──────────────────────────────────────────────────────────────
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// ─────────────────────────────────────────────────────────────────────────────
+// STATIC FILES
+// ─────────────────────────────────────────────────────────────────────────────
 
-// ── Routes ────────────────────────────────────────────────────────────────────
+app.use(
+  "/uploads",
+  express.static(
+    path.join(__dirname, "uploads")
+  )
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HEALTH CHECK
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
  * @openapi
  * /health:
@@ -84,48 +161,123 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
  *       200:
  *         description: Server is running
  */
-app.get("/health", (_req, res) => res.json({ status: "ok" }));
+
+app.get("/health", (_req, res) => {
+  res.json({
+    status: "ok",
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ROUTES
+// ─────────────────────────────────────────────────────────────────────────────
+
 app.use("/public", publicRoutes);
+
 app.use("/auth", authRoutes);
+
 app.use("/user", userRoutes);
+
 app.use("/admin", adminRoutes);
+
 app.use("/vendor", vendorRoutes);
+
 app.use("/delivery", deliveryRoutes.main);
+
 app.use("/delivery", deliveryRoutes.statusRouter);
 
-// ── DB test (dev/staging only) ────────────────────────────────────────────────
-if (process.env.NODE_ENV !== 'production') {
+// ─────────────────────────────────────────────────────────────────────────────
+// DATABASE TEST
+// Development only
+// ─────────────────────────────────────────────────────────────────────────────
+
+if (process.env.NODE_ENV !== "production") {
   app.get("/api/db-test", async (_req, res) => {
     try {
       const result = await pool.query("SELECT NOW()");
-      res.json({ success: true, message: "Database connection successful", timestamp: result.rows[0] });
+
+      res.json({
+        success: true,
+        message: "Database connection successful",
+        timestamp: result.rows[0],
+      });
     } catch (error) {
-      console.error("Database connection error:", error);
-      res.status(500).json({ success: false, error: "Database connection failed" });
+      console.error(
+        "Database connection error:",
+        error
+      );
+
+      res.status(500).json({
+        success: false,
+        error: "Database connection failed",
+      });
     }
   });
 }
 
-// ── 404 ───────────────────────────────────────────────────────────────────────
-app.use((_req, res) => res.status(404).json({ error: "Endpoint not found" }));
+// ─────────────────────────────────────────────────────────────────────────────
+// 404 HANDLER
+// ─────────────────────────────────────────────────────────────────────────────
 
-// ── Error handler ─────────────────────────────────────────────────────────────
-app.use((err, _req, res, _next) => {
-  console.error(err);
-  const message = process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message;
-  res.status(500).json({ error: "server_error", message });
+app.use((_req, res) => {
+  res.status(404).json({
+    error: "Endpoint not found",
+  });
 });
 
-// ── Socket.io ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// ERROR HANDLER
+// ─────────────────────────────────────────────────────────────────────────────
+
+app.use((err, _req, res, _next) => {
+  console.error(err);
+
+  const message =
+    process.env.NODE_ENV === "production"
+      ? "Internal server error"
+      : err.message;
+
+  res.status(500).json({
+    error: "server_error",
+    message,
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SOCKET.IO
+// ─────────────────────────────────────────────────────────────────────────────
+
 const server = http.createServer(app);
+
 const io = new Server(server, {
-  cors: { origin: allowedOrigin, credentials: true },
+  cors: {
+    origin: allowedOrigin,
+    credentials: true,
+  },
 });
 
 const { initSocketManager } = require("./utils/socketManager");
+
 initSocketManager(io);
 
+// ─────────────────────────────────────────────────────────────────────────────
+// START SERVER
+// ─────────────────────────────────────────────────────────────────────────────
+
 server.listen(PORT, () => {
-  console.log(`WaterMan API running on http://localhost:${PORT}`);
-  console.log(`Swagger docs available at http://localhost:${PORT}/swagger`);
+  console.log(
+    `WaterMan API running on http://localhost:${PORT}`
+  );
+
+  console.log(
+    `Swagger docs available at http://localhost:${PORT}/swagger`
+  );
+
+  console.log(
+    `Environment: ${process.env.NODE_ENV || "development"}`
+  );
+
+  console.log(
+    `Frontend URL: ${allowedOrigin}`
+  );
 });
