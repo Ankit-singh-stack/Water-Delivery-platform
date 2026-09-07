@@ -1162,3 +1162,76 @@ BEGIN
     ALTER TABLE orders ADD COLUMN delivery_fee DECIMAL(10,2);
   END IF;
 END $$;
+
+-- ============================================
+-- Seed cities for the seeded states
+-- ============================================
+-- Reference states by their state_code so this is safe to re-apply and works
+-- against both fresh and existing databases.
+CREATE TEMP TABLE IF NOT EXISTS _city_seed (state_code VARCHAR(5), city VARCHAR(100));
+
+TRUNCATE _city_seed;
+
+INSERT INTO _city_seed (state_code, city) VALUES
+  ('UP', 'Lucknow'),
+  ('UP', 'Kanpur'),
+  ('UP', 'Varanasi'),
+  ('UP', 'Agra'),
+  ('UP', 'Noida'),
+  ('UP', 'Ghaziabad'),
+  ('UP', 'Prayagraj'),
+  ('UP', 'Bareilly'),
+  ('DL', 'New Delhi'),
+  ('DL', 'South Delhi'),
+  ('DL', 'North Delhi'),
+  ('MH', 'Mumbai'),
+  ('MH', 'Pune'),
+  ('MH', 'Nagpur'),
+  ('MH', 'Nashik'),
+  ('MH', 'Thane'),
+  ('MH', 'Aurangabad'),
+  ('KA', 'Bengaluru'),
+  ('KA', 'Mysuru'),
+  ('KA', 'Hubballi'),
+  ('TN', 'Chennai'),
+  ('TN', 'Coimbatore'),
+  ('TN', 'Madurai'),
+  ('TN', 'Tiruchirappalli'),
+  ('TG', 'Hyderabad'),
+  ('TG', 'Warangal'),
+  ('WB', 'Kolkata'),
+  ('WB', 'Howrah'),
+  ('GJ', 'Ahmedabad'),
+  ('GJ', 'Surat'),
+  ('GJ', 'Vadodara'),
+  ('RJ', 'Jaipur'),
+  ('RJ', 'Jodhpur'),
+  ('RJ', 'Udaipur'),
+  ('PB', 'Ludhiana'),
+  ('PB', 'Amritsar'),
+  ('HR', 'Gurugram'),
+  ('HR', 'Faridabad'),
+  ('MP', 'Bhopal'),
+  ('MP', 'Indore'),
+  ('KL', 'Kochi'),
+  ('KL', 'Thiruvananthapuram'),
+  ('AP', 'Visakhapatnam'),
+  ('AP', 'Vijayawada'),
+  ('BR', 'Patna'),
+  ('BR', 'Gaya'),
+  ('OR', 'Bhubaneswar'),
+  ('OR', 'Cuttack'),
+  ('AS', 'Guwahati'),
+  ('JH', 'Ranchi'),
+  ('UK', 'Dehradun'),
+  ('CT', 'Raipur'),
+  ('GA', 'Panaji'),
+  ('CH', 'Chandigarh');
+
+INSERT INTO cities (name, state_id)
+SELECT s.city, st.id
+FROM _city_seed s
+JOIN states st ON st.state_code = s.state_code
+ON CONFLICT (name, state_id) DO NOTHING;
+
+DROP TABLE _city_seed;
