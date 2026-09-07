@@ -979,42 +979,36 @@ BEFORE UPDATE ON notifications
 FOR EACH ROW
 EXECUTE FUNCTION trigger_set_updated_at();
 
--- Notification preferences
+-- Notification preferences (row-per-category+channel)
 CREATE TABLE IF NOT EXISTS notification_preferences (
-  id                     UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-  user_id                UUID NOT NULL UNIQUE
-                         REFERENCES users(id)
-                         ON DELETE CASCADE,
+  user_id    UUID NOT NULL
+             REFERENCES users(id)
+             ON DELETE CASCADE,
 
-  order_updates_in_app  BOOLEAN NOT NULL DEFAULT TRUE,
-  order_updates_sms      BOOLEAN NOT NULL DEFAULT FALSE,
+  category   VARCHAR(30) NOT NULL
+             CHECK (
+               category IN (
+                 'order',
+                 'payment',
+                 'promo',
+                 'system',
+                 'delivery'
+               )
+             ),
 
-  -- EMAIL ENABLED BY DEFAULT
-  order_updates_email    BOOLEAN NOT NULL DEFAULT TRUE,
+  channel    VARCHAR(10) NOT NULL
+             CHECK (
+               channel IN ('in_app', 'sms', 'email')
+             ),
 
-  payment_updates_in_app BOOLEAN NOT NULL DEFAULT TRUE,
-  payment_updates_sms     BOOLEAN NOT NULL DEFAULT FALSE,
+  enabled    BOOLEAN NOT NULL DEFAULT TRUE,
 
-  -- EMAIL ENABLED BY DEFAULT
-  payment_updates_email   BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 
-  delivery_updates_in_app BOOLEAN NOT NULL DEFAULT TRUE,
-  delivery_updates_sms     BOOLEAN NOT NULL DEFAULT FALSE,
-
-  -- EMAIL ENABLED BY DEFAULT
-  delivery_updates_email   BOOLEAN NOT NULL DEFAULT TRUE,
-
-  promotional_in_app      BOOLEAN NOT NULL DEFAULT FALSE,
-  promotional_sms         BOOLEAN NOT NULL DEFAULT FALSE,
-  promotional_email       BOOLEAN NOT NULL DEFAULT FALSE,
-
-  system_in_app           BOOLEAN NOT NULL DEFAULT TRUE,
-  system_sms              BOOLEAN NOT NULL DEFAULT FALSE,
-  system_email            BOOLEAN NOT NULL DEFAULT FALSE,
-
-  created_at              TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at              TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  UNIQUE (user_id, category, channel)
 );
 
 DROP TRIGGER IF EXISTS set_updated_at
@@ -1217,6 +1211,7 @@ INSERT INTO _city_seed (state_code, city) VALUES
   ('KL', 'Thiruvananthapuram'),
   ('AP', 'Visakhapatnam'),
   ('AP', 'Vijayawada'),
+  ('AP', 'Nellore'),
   ('BR', 'Patna'),
   ('BR', 'Gaya'),
   ('OR', 'Bhubaneswar'),
@@ -1234,4 +1229,96 @@ FROM _city_seed s
 JOIN states st ON st.state_code = s.state_code
 ON CONFLICT (name, state_id) DO NOTHING;
 
-DROP TABLE _city_seed;
+-- ============================================
+-- Notification schema alignment migrations
+-- ============================================
+-- The notifications table needs the `category` column used by the notification
+-- service. Safe to add idempotently.
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notifications' AND column_name = 'category'
+  ) THEN
+    ALTER TABLE notifications
+    ADD COLUMN category VARCHAR(30)
+    CHECK (category IN ('order','payment','promo','system','delivery'));
+  END IF;
+END $$;
+
+-- If a legacy boolean-style notification_preferences table exists (created by an
+-- older schema before the row-per-category+channel shape) rebuild it so the
+-- notification service can insert (user_id, category, channel, enabled).
+DO $$
+DECLARE
+  has_boolean_style BOOLEAN;
+  has_row_style     BOOLEAN;
+BEGIN
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_preferences'
+      AND column_name = 'order_updates_in_app'
+  ) INTO has_boolean_style;
+
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_preferences'
+      AND column_name = 'category'
+  ) INTO has_row_style;
+
+  -- Only rebuild when the legacy style exists and the row style does not.
+  IF has_boolean_style AND NOT has_row_style THEN
+    ALTER TABLE notification_preferences RENAME TO notification_preferences_legacy;
+
+    CREATE TABLE notification_preferences (
+      id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      category   VARCHAR(30) NOT NULL
+                 CHECK (category IN ('order','payment','promo','system','delivery')),
+      channel    VARCHAR(10) NOT NULL
+                 CHECK (channel IN ('in_app', 'sms', 'email')),
+      enabled    BOOLEAN NOT NULL DEFAULT TRUE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE (user_id, category, channel)
+    );
+
+    INSERT INTO notification_preferences (user_id, category, channel, enabled)
+    SELECT
+      user_id, 'order',   'in_app', order_updates_in_app
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'order',   'sms',    order_updates_sms
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'order',   'email',  order_updates_email
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'payment', 'in_app', payment_updates_in_app
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'payment', 'sms',    payment_updates_sms
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'payment', 'email',  payment_updates_email
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'delivery','in_app', delivery_updates_in_app
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'delivery','sms',    delivery_updates_sms
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'delivery','email',  delivery_updates_email
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'promo',   'in_app', promotional_in_app
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'promo',   'sms',    promotional_sms
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'promo',   'email',  promotional_email
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'system',  'in_app', system_in_app
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'system',  'sms',    system_sms
+    FROM notification_preferences_legacy
+    UNION ALL SELECT user_id, 'system',  'email',  system_email
+    FROM notification_preferences_legacy;
+
+    DROP TABLE notification_preferences_legacy;
+  END IF;
+END $$;
+
+DROP TABLE IF EXISTS _city_seed;
