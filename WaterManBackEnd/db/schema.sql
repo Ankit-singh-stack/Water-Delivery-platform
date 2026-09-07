@@ -1057,26 +1057,6 @@ CREATE INDEX IF NOT EXISTS idx_notif_del_notif
 CREATE INDEX IF NOT EXISTS idx_notif_del_status
   ON notification_deliveries(status);
 
--- Migration: widen notification_preferences.category to include 'delivery'
-ALTER TABLE notification_preferences
-DROP CONSTRAINT IF EXISTS notification_preferences_category_check;
-
-ALTER TABLE notification_preferences
-ADD CONSTRAINT notification_preferences_category_check
-CHECK (
-  category IN ('order','payment','promo','system','delivery')
-);
-
--- Migration: widen notifications.category to include 'delivery'
-ALTER TABLE notifications
-DROP CONSTRAINT IF EXISTS notifications_category_check;
-
-ALTER TABLE notifications
-ADD CONSTRAINT notifications_category_check
-CHECK (
-  category IN ('order','payment','promo','system','delivery')
-);
-
 -- ============================================
 -- Delivery partner service city
 -- ============================================
