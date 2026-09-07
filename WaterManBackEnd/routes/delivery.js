@@ -471,11 +471,17 @@ router.post("/requests/:assignmentId/accept", async (req, res, next) => {
     }
     const order = oRows[0];
 
-    // Notify the order's vendor that the delivery partner accepted.
+    // Fetch the order's vendor (inside the transaction).
     const { rows: vendorUsers } = await client.query(
       "SELECT user_id FROM vendor_profiles WHERE id = $1", [order.vendor_id]
     );
     const vendorUserId = vendorUsers[0]?.user_id;
+
+    // Commit before dispatching notifications so a slow notification can
+    // never hold the transaction / pool connection open.
+    await client.query("COMMIT");
+
+    // Notify the order's vendor that the delivery partner accepted.
     if (vendorUserId) {
       await notify(pool, {
         userId: vendorUserId,
@@ -490,8 +496,6 @@ router.post("/requests/:assignmentId/accept", async (req, res, next) => {
       template: T.CUSTOMER_DELIVERY_ASSIGNED({ orderNumber: order.order_number }),
       orderId: order.id,
     });
-
-    await client.query("COMMIT");
 
     if (vendorUserId) notifyUser(vendorUserId, "delivery-updated", { orderId: order.id, orderNumber: order.order_number, status: "delivery_accepted" });
     notifyUser(order.user_id, "order-updated", { orderId: order.id, orderNumber: order.order_number, status: "delivery_accepted" });

@@ -156,6 +156,9 @@ async function notify(pool, {
 
   // ---------------------------------------------------------
   // 4. EMAIL
+  //    Dispatched without awaiting so a slow SMTP server does
+  //    not block the HTTP response (order placement / accept
+  //    requests used to hang for 10s+ per email).
   // ---------------------------------------------------------
 
   const emailEnabled = isChannelEnabled(prefs, category, 'email');
@@ -243,23 +246,29 @@ async function notify(pool, {
       </html>
     `;
 
-    emailResult = await sendEmail(
-      userInfo.email,
-      title,
-      html
-    );
-
-    await logDelivery(
-      pool,
-      notification.id,
-      "email",
-      userInfo.email,
-      emailResult
-    );
+    sendEmail(userInfo.email, title, html)
+      .then((result) => {
+        emailResult = result;
+        return logDelivery(
+          pool,
+          notification.id,
+          "email",
+          userInfo.email,
+          result
+        );
+      })
+      .catch((err) => {
+        console.error(`[Notification] Email dispatch failed for ${userInfo.email}:`, err.message);
+        return logDelivery(pool, notification.id, "email", userInfo.email, {
+          success: false,
+          error: err.message,
+        });
+      });
   }
 
   // ---------------------------------------------------------
   // 5. SMS
+  //    Also dispatched without awaiting (see EMAIL note above).
   // ---------------------------------------------------------
 
   const smsEnabled = isChannelEnabled(prefs, category, 'sms');
@@ -269,18 +278,24 @@ async function notify(pool, {
     const smsText =
       `${title}\n${message || ""}`;
 
-    smsResult = await sendSMS(
-      userInfo.phone,
-      smsText
-    );
-
-    await logDelivery(
-      pool,
-      notification.id,
-      "sms",
-      userInfo.phone,
-      smsResult
-    );
+    sendSMS(userInfo.phone, smsText)
+      .then((result) => {
+        smsResult = result;
+        return logDelivery(
+          pool,
+          notification.id,
+          "sms",
+          userInfo.phone,
+          result
+        );
+      })
+      .catch((err) => {
+        console.error(`[Notification] SMS dispatch failed for ${userInfo.phone}:`, err.message);
+        return logDelivery(pool, notification.id, "sms", userInfo.phone, {
+          success: false,
+          error: err.message,
+        });
+      });
   }
 
   // ---------------------------------------------------------

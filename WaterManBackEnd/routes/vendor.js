@@ -171,8 +171,14 @@ router.patch("/orders/:id/accept", async (req, res, next) => {
     }
     const order = rows[0];
 
-    // Fetch vendor details
-    const { rows: vRows } = await client.query(
+    // Commit the acceptance immediately so the pool connection is released
+    // even if notification dispatch is slow. Leaving a transaction open across
+    // await notify() leaked connections in production (SMTP stalls made orders
+    // hang and exhausted the 10-connection pool).
+    await client.query("COMMIT");
+
+    // Fetch vendor details (outside the transaction)
+    const { rows: vRows } = await pool.query(
       `SELECT vp.company_name, u.phone
        FROM vendor_profiles vp JOIN users u ON u.id = vp.user_id
        WHERE vp.id = $1`,
@@ -193,8 +199,6 @@ router.patch("/orders/:id/accept", async (req, res, next) => {
       }),
       orderId: order.id,
     });
-
-    await client.query("COMMIT");
 
     notifyUser(order.user_id, 'order-updated', {
       orderId:       order.id,
@@ -1091,8 +1095,13 @@ async function createAssignment(order, partnerId, expiresAt) {
      RETURNING id`,
     [order.id, partnerId, expiresAt]
   );
-  const assignmentId = rows[0].id;
-  // Notify the delivery partner user.
+  return rows[0].id;
+}
+
+// Notify the delivery partner a block was assigned. Kept separate from
+// createAssignment so it is only called AFTER the surrounding DB work commits
+// (a slow notification must never hold a transaction / pool connection open).
+async function notifyAssignment(partnerId, order, assignmentId) {
   const { rows: pRows } = await pool.query(
     "SELECT user_id FROM delivery_partner_profiles WHERE id = $1", [partnerId]
   );
@@ -1108,7 +1117,6 @@ async function createAssignment(order, partnerId, expiresAt) {
       pickup: order.delivery_city, deliveryCity: order.delivery_city,
     });
   }
-  return assignmentId;
 }
 
 // POST /vendor/orders/:id/assign — assign order to a specific delivery partner
@@ -1159,8 +1167,9 @@ router.post("/orders/:id/assign", async (req, res, next) => {
 
     await client.query("COMMIT");
 
-    // Notify the customer that a partner is being assigned.
-    // (createAssignment already notified the partner.)
+    // Notify the delivery partner after the transaction commits so a slow
+    // notification can never hold the transaction / pool connection open.
+    await notifyAssignment(deliveryPartnerId, updatedOrder, assignmentId);
 
     res.json({ assignmentId, orderId: updatedOrder.id, orderNumber: updatedOrder.order_number, status: "assigned", timeoutSec });
   } catch (err) {
@@ -1228,6 +1237,8 @@ router.post("/orders/:id/auto-assign", async (req, res, next) => {
     const assignmentId = await createAssignment({
       id: order.id, order_number: updatedOrder.order_number, delivery_city: updatedOrder.delivery_city,
     }, partnerId, new Date(Date.now() + timeoutSec * 1000));
+
+    await notifyAssignment(partnerId, updatedOrder, assignmentId);
 
     res.json({ assignmentId, orderId: updatedOrder.id, orderNumber: updatedOrder.order_number, status: "assigned", partnerId, timeoutSec });
   } catch (err) { next(err); }

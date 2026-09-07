@@ -28,6 +28,13 @@ function getTransporter() {
       user,
       pass,
     },
+    // Fail fast instead of hanging for minutes: in some hosting environments
+    // outbound SMTP is blackholed, and an un-awaited sendEmail() that never
+    // resolves previously tied up request handling (orders/accepts hung until
+    // the pool of DB connections was exhausted).
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000,
   });
 
   return transporter;
