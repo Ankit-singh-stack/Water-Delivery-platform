@@ -1321,4 +1321,49 @@ BEGIN
   END IF;
 END $$;
 
+-- ============================================
+-- Notification delivery log alignment
+-- ============================================
+-- The notification service (services/notification.js logDelivery) writes
+-- recipient/error/retry_count/provider/updated_at. Add them idempotently so
+-- both fresh and existing databases match what the code expects.
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_deliveries' AND column_name = 'recipient'
+  ) THEN
+    ALTER TABLE notification_deliveries ADD COLUMN recipient VARCHAR(255);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_deliveries' AND column_name = 'error'
+  ) THEN
+    ALTER TABLE notification_deliveries ADD COLUMN error TEXT;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_deliveries' AND column_name = 'retry_count'
+  ) THEN
+    ALTER TABLE notification_deliveries ADD COLUMN retry_count INT NOT NULL DEFAULT 0;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_deliveries' AND column_name = 'provider'
+  ) THEN
+    ALTER TABLE notification_deliveries ADD COLUMN provider VARCHAR(50);
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'notification_deliveries' AND column_name = 'updated_at'
+  ) THEN
+    ALTER TABLE notification_deliveries ADD COLUMN updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+  END IF;
+END $$;
+
 DROP TABLE IF EXISTS _city_seed;
